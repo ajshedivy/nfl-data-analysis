@@ -139,3 +139,31 @@ class football_scraper:
         tables = pd.concat(collection)
         
         return tables
+    
+    
+    
+    def get_advanced_data_tables_passing(self, category, num_years, tbl_id):
+        
+        collection = []
+        for i in range(1, num_years+1):
+            page = self.home_url + self.links.loc[i]['link'] + 'passing_advanced.htm'
+            print(page)
+            r = requests.get(page)
+            soup = BeautifulSoup(r.content, 'html.parser')
+            table = soup.find(id = tbl_id)
+            tab_data = [[cell.text for cell in row.find_all(["th","td"])]
+                                                for row in table.find_all("tr")][1:]
+
+            df = pd.DataFrame(tab_data)
+            df.columns = df.iloc[0,:]
+            df.drop(index=0,inplace=True)
+            df['year'] = self.links.loc[i]['link'].split("/")[2]
+            df.query("Rk != {}".format("Rk"))
+
+            collection.append(df)
+
+
+        
+        tables = pd.concat(collection)
+        
+        return tables
