@@ -7,6 +7,7 @@ from itertools import chain
 from bs4 import BeautifulSoup
 import pandas as pd
 import time
+import numpy as np
 
 '''
 Selenium web scaper for sports reference 
@@ -27,7 +28,7 @@ scaper = Sports_Ref_Scraper(b, url)
 
 '''
 
-class Sports_Ref_Scraper:
+class football_scraper:
     def __init__(self, driver, home_url):
         self.driver = driver
         self.home_url = home_url
@@ -36,7 +37,7 @@ class Sports_Ref_Scraper:
     def get_links(self):
         url = self.home_url + '/years/'
         self.driver.get(url)
-        page = BeautifulSoup(self.driver.page_source)
+        page = BeautifulSoup(self.driver.page_source, features="lxml")
         table = page.find(id = "div_years")
         rows = []
         table.find_all("th")
@@ -73,7 +74,7 @@ class Sports_Ref_Scraper:
     def get_individual_passing(self, num_years, label):
         
         collection = []
-        for i in range(0, num_years):
+        for i in range(1, num_years):
             link = self.links.loc[i]['link']
             df = self.get_passing_data(link)
             collection.append(df)
@@ -85,7 +86,7 @@ class Sports_Ref_Scraper:
         url = self.home_url + link
         self.driver.get(url)
         time.sleep(3)
-        page = BeautifulSoup(self.driver.page_source)
+        page = BeautifulSoup(self.driver.page_source, features="lxml")
         table = page.find(id = idd)
         tab_data = [[cell.text for cell in row.find_all(["th","td"])]
                                     for row in table.find_all("tr")]
@@ -104,7 +105,7 @@ class Sports_Ref_Scraper:
             - "team_stats": summary of team offense (not recommended at the moment)
         '''
         collection = []
-        for i in range(0, num_years):
+        for i in range(1, num_years):
             print("iteration: ", i)
             link = self.links.loc[i]['link']
             df = self.get_team_stats_helper(link, idd)
@@ -112,3 +113,29 @@ class Sports_Ref_Scraper:
             
         combined = self.giant_concat(collection)
         combined.to_csv(label + '.csv')
+        
+    def get_data_tables(self, category, num_years):
+        
+        collection = []
+        for i in range(1, num_years+1):
+            page = self.home_url + self.links.loc[i]['link'] + '{}.htm'.format(category)
+            print(page)
+            r = requests.get(page)
+            soup = BeautifulSoup(r.content, 'html.parser')
+            table = soup.find_all('table')[0]  
+
+            tab_data = [[cell.text for cell in row.find_all(["th","td"])]
+                                        for row in table.find_all("tr")]
+            df = pd.DataFrame(tab_data)
+            df.columns = df.iloc[0,:]
+            df.drop(index=0,inplace=True)
+            df['year'] = self.links.loc[i]['link'].split("/")[2]
+            df.query("Rk != {}".format("Rk"))
+
+            collection.append(df)
+
+
+        
+        tables = pd.concat(collection)
+        
+        return tables
