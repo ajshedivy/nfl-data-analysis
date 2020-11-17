@@ -7,6 +7,7 @@ df_print: paged
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo=TRUE,message=FALSE,warning=FALSE,cache=TRUE,autodep=TRUE,cache.comments=FALSE)
 library(tidyverse)
+library(ggplot2)
 ```
 
 
@@ -14,6 +15,55 @@ library(tidyverse)
 # all data 
 data <- read_csv("../data/receiving_70_19.csv")
 
+```
+
+
+```{r}
+# Multiple plot function
+#
+# ggplot objects can be passed in ..., or to plotlist (as a list of ggplot objects)
+# - cols:   Number of columns in layout
+# - layout: A matrix specifying the layout. If present, 'cols' is ignored.
+#
+# If the layout is something like matrix(c(1,2,3,3), nrow=2, byrow=TRUE),
+# then plot 1 will go in the upper left, 2 will go in the upper right, and
+# 3 will go all the way across the bottom.
+#
+multiplot <- function(..., plotlist=NULL, file, cols=1, layout=NULL) {
+  library(grid)
+
+  # Make a list from the ... arguments and plotlist
+  plots <- c(list(...), plotlist)
+
+  numPlots = length(plots)
+
+  # If layout is NULL, then use 'cols' to determine layout
+  if (is.null(layout)) {
+    # Make the panel
+    # ncol: Number of columns of plots
+    # nrow: Number of rows needed, calculated from # of cols
+    layout <- matrix(seq(1, cols * ceiling(numPlots/cols)),
+                    ncol = cols, nrow = ceiling(numPlots/cols))
+  }
+
+ if (numPlots==1) {
+    print(plots[[1]])
+
+  } else {
+    # Set up the page
+    grid.newpage()
+    pushViewport(viewport(layout = grid.layout(nrow(layout), ncol(layout))))
+
+    # Make each plot, in the correct location
+    for (i in 1:numPlots) {
+      # Get the i,j matrix positions of the regions that contain this subplot
+      matchidx <- as.data.frame(which(layout == i, arr.ind = TRUE))
+
+      print(plots[[i]], vp = viewport(layout.pos.row = matchidx$row,
+                                      layout.pos.col = matchidx$col))
+    }
+  }
+}
 ```
 
 
@@ -52,25 +102,65 @@ stats_by_year <- data %>%
 
 stats_by_year
 
-ggplot(stats_by_year, mapping = aes(x = year, y = total_yards)) +
+total_yards <- ggplot(stats_by_year, mapping = aes(x = year, y = total_yards)) +
   geom_point() + 
   ggtitle("total yards")
 
-ggplot(stats_by_year, mapping = aes(x = year, y = total_TDs)) +
+total_tds <- ggplot(stats_by_year, mapping = aes(x = year, y = total_TDs)) +
   geom_point() + 
   ggtitle("total Tds")
 
-ggplot(stats_by_year, mapping = aes(x = year, y = total_rec)) +
+total_rec <- ggplot(stats_by_year, mapping = aes(x = year, y = total_rec)) +
   geom_point() + 
   ggtitle("total receptions")
  
-ggplot(stats_by_year, mapping = aes(x = year, y = avg_yds_rec)) +
+avg_rec <- ggplot(stats_by_year, mapping = aes(x = year, y = avg_yds_rec)) +
   geom_point() + 
   ggtitle("Average yards per reception")
 ```
 
+```{r, fig.height= 8}
+
+multiplot(total_yards, total_rec, total_tds, avg_rec)
+
+```
 
 
+```{r}
+GNB <- data %>% 
+  filter(Tm == "GNB") %>% 
+  group_by(year) %>% 
+  summarise(total_yards = sum(Yds),
+            total_TD = sum(TD)) %>% 
+  ggplot(mapping = aes(x = year, y = total_yards)) +
+  geom_point() +
+  ggtitle("Green Bay total yards")
+
+
+MIN <- data %>%
+  filter(Tm == "MIN") %>%
+  group_by(year) %>%
+  summarise(total_yards = sum(Yds),
+            total_TD = sum(TD)) %>%
+  ggplot(mapping = aes(x = year, y = total_yards)) +
+  geom_point() + 
+  ggtitle("Minnesota total yards")
+
+multiplot(GNB, MIN)
+
+```
+
+
+
+
+```{r}
+DA <- data %>% 
+  filter(Player == "Davante Adams*"| Player == "Julio Jones *") %>% 
+  ggplot(aes(x = year, y = yds_game, color=Player)) + 
+  geom_point()
+
+DA
+```
 
 
 
