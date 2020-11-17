@@ -1,0 +1,95 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+```{r}
+knitr::opts_chunk$set(echo=TRUE,message=FALSE,warning=FALSE,cache=TRUE,autodep=TRUE,cache.comments=FALSE)
+library(tidyverse)
+library(lubridate)
+
+```
+
+
+```{r}
+# all data 
+data <- read_csv("../data/receiving_70_19.csv")
+
+```
+
+
+```{r}
+data <- data %>% 
+  mutate(G = as.integer(G),
+         Age = as.integer(Age),
+         GS = as.integer(GS),
+         Yds = as.integer(Yds),
+         Rec = as.integer(Rec),
+         TD = as.integer(TD),
+         year = as.integer(year)) %>% 
+  rename(
+    yds_rec = `Y/R`,
+    yds_game = `Y/G`,
+    rec_game = `R/G`) %>%
+  filter(Tm != "2TM") %>%
+  filter(Tm != "3TM") %>%
+  select(-X1, -`Y/Tgt`, -`Fmb`,-Lng)
+
+data
+
+
+```
+
+
+
+```{r}
+stats_by_year <- data %>% 
+  group_by(year) %>% 
+  summarise(total_yards = sum(Yds),
+            total_rec = sum(Rec), 
+            total_TDs = sum(TD),
+            avg_yds_rec = total_yards / total_rec
+            )
+
+stats_by_year
+
+ggplot(stats_by_year, mapping = aes(x = year, y = total_yards)) +
+  geom_point() + 
+  ggtitle("total yards")
+
+ggplot(stats_by_year, mapping = aes(x = year, y = total_TDs)) +
+  geom_point() + 
+  ggtitle("total Tds")
+
+ggplot(stats_by_year, mapping = aes(x = year, y = total_rec)) +
+  geom_point() + 
+  ggtitle("total receptions")
+ 
+ggplot(stats_by_year, mapping = aes(x = year, y = avg_yds_rec)) +
+  geom_point() + 
+  ggtitle("Average yards per reception")
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
