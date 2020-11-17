@@ -1,7 +1,8 @@
 unnamed-chunk-2	$	[[	==	as.data.frame	c	ceiling	for	grid.layout	grid.newpage	if	is.null	length	library	list	matrix	ncol	nrow	print	pushViewport	seq	viewport	which
 unnamed-chunk-3	!=	%>%	Age	as.integer	filter	Fmb	G	GS	Lng	mutate	R/G	Rec	rename	select	TD	Tm	X1	Y/G	Y/R	Y/Tgt	Yds	year
-unnamed-chunk-4	%>%	aes	avg_yds_rec	data	geom_point	ggplot	ggtitle	group_by	Rec	sum	summarise	TD	total_TDs	Yds	year
+unnamed-chunk-4	%>%	aes	avg_yds_rec	data	geom_point	geom_smooth	ggplot	ggtitle	group_by	Rec	sum	summarise	TD	total_TDs	Yds	year
 unnamed-chunk-1	read_csv
-unnamed-chunk-5	avg_rec	multiplot	total_rec	total_tds	total_yards
-unnamed-chunk-6	%>%	==	aes	data	filter	geom_point	ggplot	ggtitle	group_by	multiplot	sum	summarise	TD	Tm	total_yards	Yds	year
-unnamed-chunk-7	%>%	|	==	aes	data	filter	geom_point	ggplot	Player	yds_game	year
+unnamed-chunk-5	total_rec	total_tds	total_yards
+unnamed-chunk-6	avg_rec	multiplot	total_rec	total_tds	total_yards
+unnamed-chunk-7	%>%	==	aes	data	filter	geom_point	ggplot	ggtitle	group_by	multiplot	sum	summarise	TD	Tm	total_yards	Yds	year
+unnamed-chunk-8	%>%	|	==	aes	data	filter	geom_point	ggplot	Player	yds_game	year

@@ -104,20 +104,31 @@ stats_by_year
 
 total_yards <- ggplot(stats_by_year, mapping = aes(x = year, y = total_yards)) +
   geom_point() + 
+  geom_smooth() + 
   ggtitle("total yards")
 
 total_tds <- ggplot(stats_by_year, mapping = aes(x = year, y = total_TDs)) +
   geom_point() + 
+  geom_smooth() + 
   ggtitle("total Tds")
 
 total_rec <- ggplot(stats_by_year, mapping = aes(x = year, y = total_rec)) +
   geom_point() + 
+  geom_smooth() + 
   ggtitle("total receptions")
  
 avg_rec <- ggplot(stats_by_year, mapping = aes(x = year, y = avg_yds_rec)) +
   geom_point() + 
+  geom_smooth() + 
   ggtitle("Average yards per reception")
 ```
+```{r}
+total_yards
+total_rec
+total_tds
+```
+
+
 
 ```{r, fig.height= 8}
 
