@@ -1,12 +1,12 @@
 ---
-title: "R Notebook"
-output: html_notebook
+title: "NFL Receiving Data Analysis"
+output:
+html_document:
+df_print: paged
 ---
-```{r}
+```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo=TRUE,message=FALSE,warning=FALSE,cache=TRUE,autodep=TRUE,cache.comments=FALSE)
 library(tidyverse)
-library(lubridate)
-
 ```
 
 

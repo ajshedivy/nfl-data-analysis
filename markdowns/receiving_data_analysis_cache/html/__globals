@@ -1,0 +1,4 @@
+unnamed-chunk-2	!=	%>%	Age	as.integer	filter	Fmb	G	GS	Lng	mutate	R/G	Rec	rename	select	TD	Tm	X1	Y/G	Y/R	Y/Tgt	Yds	year
+unnamed-chunk-3	%>%	aes	avg_yds_rec	data	geom_point	ggplot	ggtitle	group_by	Rec	sum	summarise	TD	total_rec	total_TDs	total_yards	Yds	year
+unnamed-chunk-4	%>%	aes	avg_yds_rec	data	geom_point	ggplot	ggtitle	group_by	Rec	sum	summarise	TD	total_rec	total_TDs	total_yards	Yds	year
+unnamed-chunk-1	read_csv
